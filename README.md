@@ -3,7 +3,7 @@
 
 Bu proje, **YOLOv8** kullanılarak geri dönüştürülebilir atıkların (ör. plastik, cam, metal vb.) görüntüler üzerinden **nesne algılama (object detection)** yöntemiyle tespit edilmesini amaçlamaktadır.
 
-Proje; veri seti eğitimi, model oluşturma ve tek bir görüntü üzerinde tahmin (inference) adımlarını içermektedir.
+Proje; veri seti eğitimi, model oluşturma ve tek bir görüntü üzerinde tahmin adımlarını içermektedir.
 
 ---
 
