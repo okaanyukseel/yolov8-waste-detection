@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Ortamlar
+venv/
+.venv/
+env/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# YOLO eğitim / tahmin çıktıları ve indirilen ağırlıklar
+runs/
+runs_recycling/
+*.pt
+
+# Zip'ten çıkarılan veri seti klasörü
+Geri Donusum Tespiti.v1-dataset.yolov8/
