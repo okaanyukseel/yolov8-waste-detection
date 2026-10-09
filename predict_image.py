@@ -1,23 +1,29 @@
 from ultralytics import YOLO
 import cv2
 import os
+import argparse
 
 # ==== AYARLAR ====
-MODEL_PATH = r"C:\Users\okaan\Downloads\goruntu isleme\runs_recycling\yolov8m_4class_e100\weights\best.pt"
-IMAGE_PATH = r"C:\Users\okaan\OneDrive\Masaüstü\pc.jpeg"
+# train_yolov8m.py'nin ürettiği ağırlık dosyası
+MODEL_PATH = os.path.join("runs_recycling", "yolov8m_4class_e150", "weights", "best.pt")
 
 CONF = 0.25
 IMGSZ = 640
 DEVICE = 0   # ✅ GPU
 
 def main():
+    parser = argparse.ArgumentParser(description="YOLOv8m ile görsel üzerinde atık tespiti")
+    parser.add_argument("image", help="Tahmin yapılacak görselin yolu")
+    args = parser.parse_args()
+    image_path = args.image
+
     assert os.path.exists(MODEL_PATH), "Model bulunamadı"
-    assert os.path.exists(IMAGE_PATH), "Görsel bulunamadı"
+    assert os.path.exists(image_path), "Görsel bulunamadı"
 
     model = YOLO(MODEL_PATH)
 
     results = model.predict(
-        source=IMAGE_PATH,
+        source=image_path,
         imgsz=IMGSZ,
         conf=CONF,
         device=DEVICE,

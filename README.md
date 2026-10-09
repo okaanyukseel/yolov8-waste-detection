@@ -88,14 +88,13 @@ Eğitim çıktıları `runs_recycling/yolov8m_4class_e150/` klasörüne kaydedil
 
 `predict_image.py` içindeki ayarlar:
 
-- `MODEL_PATH`: Eğitilmiş modelin (`best.pt`) yolu
-- `IMAGE_PATH`: Tahmin yapılacak görüntünün yolu
+- `MODEL_PATH`: Eğitim scriptinin ürettiği `runs_recycling/yolov8m_4class_e150/weights/best.pt`
 - `CONF = 0.25`, `IMGSZ = 640`, `DEVICE = 0` (GPU)
 
-Yolları güncelledikten sonra:
+Görüntü yolu komut satırından verilir:
 
 ```bash
-python predict_image.py
+python predict_image.py ornek.jpg
 ```
 
 Script:
