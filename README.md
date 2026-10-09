@@ -1,4 +1,4 @@
-# Geri Dönüşüm Tespiti  
+# Geri Dönüşüm Tespiti
 ## YOLOv8 ile Nesne Algılama Projesi
 
 Bu proje, **YOLOv8** kullanılarak geri dönüştürülebilir atıkların (ör. plastik, cam, metal vb.) görüntüler üzerinden **nesne algılama (object detection)** yöntemiyle tespit edilmesini amaçlamaktadır.
@@ -9,77 +9,132 @@ Proje; veri seti eğitimi, model oluşturma ve tek bir görüntü üzerinde tahm
 
 ## 🎯 Projenin Amacı
 
-- Geri dönüştürülebilir atıkları otomatik olarak tespit etmek  
-- YOLOv8 mimarisi ile nesne algılama pratiği yapmak  
-- Kendi veri seti ile model eğitme ve test sürecini öğrenmek  
+- Geri dönüştürülebilir atıkları otomatik olarak tespit etmek
+- YOLOv8 mimarisi ile nesne algılama pratiği yapmak
+- Kendi veri seti ile model eğitme ve test sürecini öğrenmek
 
 ---
 
 ## 📂 Proje Yapısı
 
 ```text
+.
 ├── README.md
-├── Geri Donusum Tespiti.v1-dataset.yolov8.zip
-├── train_yolov8m.py
-└── predict_image.py
-📊 Veri Seti
-Geri Donusum Tespiti.v1-dataset.yolov8.zip
+├── Geri Donusum Tespiti.v1-dataset.yolov8.zip   # YOLOv8 formatında veri seti
+├── train_yolov8m.py                             # YOLOv8m eğitim scripti
+└── predict_image.py                             # Tek görüntü üzerinde tahmin
+```
 
-YOLOv8 formatında etiketlenmiş görüntüler
+---
 
-Train / Validation klasörleri ve data.yaml dosyasını içerir
+## 📊 Veri Seti
+
+`Geri Donusum Tespiti.v1-dataset.yolov8.zip` dosyası, YOLOv8 formatında etiketlenmiş görüntüleri içerir. Zip içeriği:
+
+```text
+├── data.yaml
+├── README.dataset.txt
+├── README.roboflow.txt
+├── train/
+│   ├── images/   # 400 görüntü (.jpg)
+│   └── labels/   # 400 etiket dosyası
+├── valid/
+│   ├── images/   # 50 görüntü
+│   └── labels/   # 50 etiket dosyası
+└── test/
+    ├── images/   # 50 görüntü
+    └── labels/   # 50 etiket dosyası
+```
 
 ⚠️ Veri seti, eğitime başlamadan önce zip dosyasından çıkarılmalıdır.
 
-🧠 Kullanılan Model
-YOLOv8m
+---
 
-Nesne algılama (Object Detection)
+## 🧠 Kullanılan Model
 
-Önceden eğitilmiş (pretrained) ağırlıklar kullanılmıştır
+- **YOLOv8m** (`yolov8m.pt`)
+- Nesne algılama (Object Detection)
+- Önceden eğitilmiş (pretrained) ağırlıklardan başlanarak eğitim yapılır
 
-⚙️ Eğitim (Training)
-Modeli eğitmek için:
+---
 
+## ⚙️ Eğitim (Training)
 
+`train_yolov8m.py` içindeki ayarlar:
+
+| Parametre | Değer |
+|---|---|
+| `DATA_YAML` | Zip'ten çıkarılan klasördeki `data.yaml` yolu (script içinde mutlak Windows yolu olarak tanımlı) |
+| `MODEL_NAME` | `yolov8m.pt` |
+| `EPOCHS` | 150 |
+| `IMGSZ` | 640 |
+| `BATCH` | 8 |
+| `DEVICE` | 0 (GPU) |
+| `WORKERS` | 2 |
+| `PROJECT_DIR` | `runs_recycling` |
+| `RUN_NAME` | `yolov8m_4class_e150` |
+
+Modeli eğitmek için önce `DATA_YAML` yolunu kendi bilgisayarınıza göre güncelleyin, ardından:
+
+```bash
 python train_yolov8m.py
+```
 
-Eğitim sırasında:
+Eğitim çıktıları `runs_recycling/yolov8m_4class_e150/` klasörüne kaydedilir; en iyi model `runs_recycling/yolov8m_4class_e150/weights/best.pt` yoludur.
 
-Veri seti data.yaml üzerinden okunur
+---
 
-Epoch, batch size ve model parametreleri script içerisinden ayarlanabilir
+## 🔍 Tahmin (Inference)
 
-Eğitim çıktıları runs/ klasörü altına kaydedilir
+`predict_image.py` içindeki ayarlar:
 
-🔍 Tahmin (Inference)
-Eğitilmiş model ile tek bir görüntü üzerinde tahmin yapmak için:
+- `MODEL_PATH`: Eğitilmiş modelin (`best.pt`) yolu
+- `IMAGE_PATH`: Tahmin yapılacak görüntünün yolu
+- `CONF = 0.25`, `IMGSZ = 640`, `DEVICE = 0` (GPU)
 
+Yolları güncelledikten sonra:
 
+```bash
 python predict_image.py
+```
 
-Girdi görüntüsü script içinde belirtilir
+Script:
 
-Çıktı, tespit edilen nesneler ve bounding box’lar ile görselleştirilir
+- tespit edilen nesneleri confidence değerine göre büyükten küçüğe sıralayarak sınıf adı, confidence ve bounding box koordinatlarıyla konsola yazdırır,
+- bounding box'ların çizildiği görüntüyü OpenCV penceresinde gösterir,
+- tahmin görselini kaydeder (`save=True`) ve kayıt klasörünü yazdırır.
 
-🛠️ Kullanılan Teknolojiler
-Python
+---
 
-Ultralytics YOLOv8
+## 📈 Sonuçlar
 
-OpenCV
+Depoda eğitim çıktıları (metrikler, `runs_recycling/` klasörü) bulunmadığından sayısal sonuçlar burada verilmemiştir.
 
-PyTorch
+---
 
-▶️ Kurulum
+## 🛠️ Kullanılan Teknolojiler
+
+- Python
+- Ultralytics YOLOv8
+- OpenCV
+- PyTorch (Ultralytics üzerinden)
+
+---
+
+## ▶️ Kurulum
+
 Gerekli kütüphaneleri yükleyin:
 
-pip install ultralytics opencv-python
+```bash
+pip install -r requirements.txt
+```
 
-📌 Notlar
-Proje eğitim ve geliştirme amaçlıdır
+> Not: `DEVICE = 0` ayarı CUDA destekli bir GPU gerektirir. GPU yoksa script içinde `DEVICE = "cpu"` olarak değiştirilebilir.
 
-Gerçek zamanlı sistemler için ek optimizasyonlar gerekebilir
+---
 
-Model performansı veri setinin kalitesine doğrudan bağlıdır
+## 📌 Notlar
 
+- Proje eğitim ve geliştirme amaçlıdır
+- Gerçek zamanlı sistemler için ek optimizasyonlar gerekebilir
+- Model performansı veri setinin kalitesine doğrudan bağlıdır
